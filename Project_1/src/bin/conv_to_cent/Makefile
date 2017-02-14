@@ -4,22 +4,28 @@ BIN=../../../bin
 EXE=conv_to_cent
 SRC=$(EXE).cpp
 OBJ=$(SRC:.cpp=.o)
-LIBDEPEND=depend.mk
+DEPEND=depend.mk
 
 CFLAGS=-g -Wall -I$(INCLUDE) 
 
-$(OBJ): $(SRC)
-	g++ -c $(CFLAGS) $(SRC)
+all: it
 
-it: $(OBJ) 
+%.o: %.cpp 
+	g++ -c $(CFLAGS) $<
+
+it: $(DEPEND) $(OBJ) 
 	g++ $(CFLAGS) $(SRC) -o $(EXE) -L$(LIBRARY) -larg -ltemp_conv 
 
 clean:
-	rm -f *.o $(EXE)
+	rm -f *.o $(EXE) *.mk
 	rm -f $(BIN)/$(EXE)
 
 install: it
 	install -C -m 775 $(EXE) $(BIN)
 
-depend: 
-	g++ -MM -MP -c -I$(INCLUDE) $(SRC) > $(LIBDEPEND) 
+depend: $(DEPEND)
+ 
+$(DEPEND): 
+	g++ -MM -MP -c -I$(INCLUDE) $(SRC) > $(DEPEND) 
+
+-include $(DEPEND)
