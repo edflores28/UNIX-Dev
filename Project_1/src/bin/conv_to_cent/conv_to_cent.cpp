@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
 	argSuccess = get_argument(argc, argv, &value);
 
 	if (argSuccess == 0)
-		cout << setprecision(3) << value  << " degrees Fahrenheight is " << setprecision(3) << convert_to_cent(value) << " degree centigrade" << endl;
+		cout << setprecision(4) << value  << " degrees Fahrenheight is " << setprecision(4) << convert_to_cent(value) << " degree centigrade" << endl;
 
 	return 0;
 
