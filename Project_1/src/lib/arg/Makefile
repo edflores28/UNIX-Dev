@@ -7,16 +7,16 @@ LIBDEPEND=depend.mk
 
 CFLAGS=-c -g -I$(INCLUDE)
 
-.PHONY: clean
-
 -include $(LIBDEPEND)
+
+.PHONY: clean
 
 all: it
 
 $(LIB): $(OBJ)
 	ar rcs $(LIB) $(OBJ)
 
-%.o: %.cpp $(LIBDEPEND)
+%.o: %.cpp
 	g++ $(CFLAGS) $<
 
 it: $(LIBDEPEND) $(LIB)
