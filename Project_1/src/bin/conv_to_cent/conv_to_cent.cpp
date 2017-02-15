@@ -2,7 +2,7 @@
  *Project: homework 1
  *
  *Progam: conv_to_cent - converts a value to centigrade
- *File Name: cent_convert.cpp
+ *File Name: conv_to_cent.cpp
  *Purpose: obtains a value in fahrenheiht from the cmd line and converts it
  *         to centigrade
  *
