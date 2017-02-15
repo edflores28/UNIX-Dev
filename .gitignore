@@ -1,3 +1,6 @@
 *.o
 *.a
-*.mk:
+*.mk
+*.swp
+conv_to_cent
+conv_to_fahr
