@@ -1,7 +1,18 @@
 LIB=./src/lib
 BIN=./src/bin
 
-it:
+TEMPCONV=./lib/libtempconv.a
+ARG=./lib/libarg.a
+
+$(TEMPCONV):
+
+$(ARG):
+
+lib: $(TEMPCONV) $(ARG)
+	$(MAKE) -C $(LIB) install
+	
+
+it: lib
 	$(MAKE) -C $(LIB) it
 	$(MAKE) -C $(BIN) it
 
