@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "fahr_convert.h"
 
 using namespace std;
@@ -14,7 +15,7 @@ int main() {
 	
 	value = convert_to_fahr(centigrade);
 
-	cout << centigrade << " degree centigrade is " << value << " Fahrenheit." << endl; 
+	cout << setprecision(4) << centigrade << " degree centigrade is " << setprecision(4) << value << " Fahrenheit." << endl; 
 
 	return 0;
 
