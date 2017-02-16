@@ -28,6 +28,11 @@ if args.s == True:
     if user_in == "Y":
         subprocess.call([make,'clean'])
         subprocess.call(['tar','cvf','homework1.tar','bin','include','lib','src'])
+
 if args.b == True:
     user_in = raw_input('Create a binary release (Y/N):') 
-    print (user_in)
+    if user_in == "Y":
+        user_in = raw_input('Enter hostname (default=',host,')')
+        if user_in:
+            host = user_in
+        print(host)
