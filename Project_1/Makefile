@@ -1,29 +1,39 @@
+#
+# Project:    Homework 1
+# Programmer: Edwin Flores
+# Course:     EN.605.414.81
+# Purpose:    Makefile that creates the arg and temp_conv
+# 	      libraries
+#
 LIB=./src/lib
 BIN=./src/bin
 
-TEMPCONV=./lib/libtempconv.a
-ARG=./lib/libarg.a
+LIBRARIES=./lib/libtempconv.a /lib/libarg.a
 
-$(TEMPCONV):
-
-$(ARG):
-
-lib: $(TEMPCONV) $(ARG)
-	$(MAKE) -C $(LIB) install
+$(LIBRARIES):
+	cd $(LIB);\
+	$(MAKE) it;\
+	$(MAKE) install;
 	
 
-it: lib
-	$(MAKE) -C $(LIB) it
-	$(MAKE) -C $(BIN) it
+it: $(LIBRARIES)
+	cd $(BIN);\
+	$(MAKE) it;\
 
 clean:
-	$(MAKE) -C $(LIB) clean
-	$(MAKE) -C $(BIN) clean 
+	cd $(LIB);\
+	$(MAKE) clean;\
+	cd ../$(BIN);\
+	$(MAKE) clean; 
 	
-install: 
-	$(MAKE) -C $(LIB) install
-	$(MAKE) -C $(BIN) install
+install: it
+	cd $(LIB);\
+	$(MAKE) install;\
+	cd ../$(BIN);\
+	$(MAKE) install; 
 
 depend: 
-	$(MAKE) -C $(LIB) depend
-	$(MAKE) -C $(BIN) depend 
+	cd $(LIB);\
+	$(MAKE) depend;\
+	cd ../$(BIN);\
+	$(MAKE) depend; 
