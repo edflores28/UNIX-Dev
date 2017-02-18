@@ -23,13 +23,16 @@ $(LIB): $(OBJ)
 
 .PHONY: it
 it: $(LIB)
+	@echo !!! Creating arg library !!!
 
 .PHONY: install
 install: it
+	@echo !!! Installing the arg library !!!
 	install -c -m 666 $(LIB) $(LIBDIR)
 
 .PHONY: clean
 clean:
+	@echo !!! Cleaning directories !!!
 	rm -f *.o *.a *.mk
 	rm -f $(LIBDIR)/$(LIB)
 	sed -e '1,/^# DO NOT DELETE/!d' Makefile > mm.tmp
@@ -37,6 +40,7 @@ clean:
 
 .PHONY: depend
 depend: $(SRCS)
+	@echo !!! Creating dependencies !!!
 	g++ -MM -MP -c -I$(INCLUDE) $(SRCS) > $(LIBDEPEND)
 	sed -e '1,/^# DO NOT DELETE/!d' Makefile > mm.tmp
 	cat $(LIBDEPEND) >> mm.tmp

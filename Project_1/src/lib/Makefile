@@ -9,20 +9,29 @@ ARGDIR=./arg
 TEMPCONVDIR=./temp_conv
 
 it:
+	@echo !!! Creating libraries !!!
 	cd $(ARGDIR);\
 	$(MAKE) it;\
 	cd ../$(TEMPCONVDIR);\
-	$(MAKE) it;\
-	cd ..;\
+	$(MAKE) it; 
 
 clean:
-	$(MAKE) --directory=$(ARGDIR) clean
-	$(MAKE) --directory=$(TEMPCONVDIR) clean 
+	@echo !!! Cleaning directories !!!
+	cd $(ARGDIR);\
+	$(MAKE) clean;\
+	cd ../$(TEMPCONVDIR);\
+	$(MAKE) clean; 
 	
 install: 
-	$(MAKE) --directory=$(ARGDIR) install
-	$(MAKE) --directory=$(TEMPCONVDIR) install
+	@echo !!! Installing the libraries !!!
+	cd $(ARGDIR);\
+	$(MAKE) install;\
+	cd ../$(TEMPCONVDIR);\
+	$(MAKE) install; 
 
 depend: 
-	$(MAKE) --directory=$(ARGDIR) depend
-	$(MAKE) --directory=$(TEMPCONVDIR) depend 
+	@echo !!! Creating dependecies !!!
+	cd $(ARGDIR);\
+	$(MAKE) depend;\
+	cd ../$(TEMPCONVDIR);\
+	$(MAKE) depend; 

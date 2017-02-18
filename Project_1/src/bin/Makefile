@@ -8,17 +8,29 @@ CENTDIR=./conv_to_cent
 FAHRDIR=./conv_to_fahr
 
 it:
-	$(MAKE) -C $(CENTDIR) it
-	$(MAKE) -C $(FAHRDIR) it
+	@echo !!! Creating executables !!!
+	cd $(CENTDIR);\
+	$(MAKE) it;\
+	cd ../$(FAHRDIR);\
+	$(MAKE) it; 
 
 clean:
-	$(MAKE) -C $(CENTDIR) clean
-	$(MAKE) -C $(FAHRDIR) clean 
+	@echo !!! Cleaning directories !!!
+	cd $(CENTDIR);\
+	$(MAKE) clean;\
+	cd ../$(FAHRDIR);\
+	$(MAKE) clean; 
 	
 install: 
-	$(MAKE) -C $(CENTDIR) install
-	$(MAKE) -C $(FAHRDIR) install
+	@echo !!! Installing the executables !!!
+	cd $(CENTDIR);\
+	$(MAKE) install;\
+	cd ../$(FAHRDIR);\
+	$(MAKE) install; 
 
 depend: 
-	$(MAKE) -C $(CENTDIR) depend
-	$(MAKE) -C $(FAHRDIR) depend 
+	@echo !!! Creating dependecies !!!
+	cd $(CENTDIR);\
+	$(MAKE) depend;\
+	cd ../$(FAHRDIR);\
+	$(MAKE) depend; 

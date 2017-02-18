@@ -35,7 +35,7 @@ else:
 if args.s == True:
     user_in = raw_input('Create a source release (Y/N):') 
     if user_in == "Y":
-        subprocess.call([make,'clean'])
+        subprocess.call(['make','clean'])
         subprocess.call(['tar','cvf','homework1.tar','bin','include','lib','src'])
 
 # Performs a clean and install and creates a tar file of just the bin directory
@@ -49,6 +49,6 @@ if args.b == True:
         if user_in:
             host = user_in
         filename = 'homework1_'+host+'.tar'
-        subprocess.call([make,'clean'])
-        subprocess.call([make,'install'])
+        subprocess.call(['make','clean'])
+        subprocess.call(['make','install'])
         subprocess.call(['tar','cvf',filename,'bin'])

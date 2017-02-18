@@ -21,10 +21,12 @@ all: it
 
 .PHONY: it
 it: $(OBJ) 
+	@echo !!! Creating conv_to_cent !!!
 	g++ $(CFLAGS) $(SRC) -o $(EXE) -L$(LIBRARY) -larg -ltemp_conv 
 
 .PHONY: clean
 clean:
+	@echo !!! Cleaning directories !!!
 	rm -f *.o $(EXE) *.mk
 	rm -f $(BIN)/$(EXE)
 	sed -e '1,/^# DO NOT DELETE/!d' Makefile > mm.tmp
@@ -32,10 +34,12 @@ clean:
 
 .PHONY: install
 install: it
+	@echo !!! Installing conv_to_cent !!!
 	install -C -m 775 $(EXE) $(BIN)
 
 .PHONY: depend
 depend: $(SRCS)
+	@echo !!! Creating dependencies !!!
 	g++ -MM -MP -c -I$(INCLUDE) $(SRC) > $(DEPEND)
 	sed -e '1,/^# DO NOT DELETE/!d' Makefile > mm.tmp
 	cat $(DEPEND) >> mm.tmp
@@ -43,9 +47,3 @@ depend: $(SRCS)
 	rm -f $(DEPEND)
 
 # DO NOT DELETE THIS LINE - make depend uses it
-conv_to_cent.o: conv_to_cent.cpp ../../../include/getarg.h \
- ../../../include/cent_convert.h
-
-../../../include/getarg.h:
-
-../../../include/cent_convert.h:
