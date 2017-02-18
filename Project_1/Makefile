@@ -5,10 +5,10 @@
 # Purpose:    Makefile that creates the arg and temp_conv
 # 	      libraries
 #
-LIB=./src/lib
-BIN=./src/bin
+LIB=src/lib
+BIN=src/bin
 
-LIBRARIES=./lib/libtempconv.a /lib/libarg.a
+LIBRARIES=/lib/libtempconv.a /lib/libarg.a
 
 $(LIBRARIES):
 	cd $(LIB);\
@@ -16,24 +16,28 @@ $(LIBRARIES):
 	$(MAKE) install;
 	
 
+.PHONY: it 
 it: $(LIBRARIES)
 	cd $(BIN);\
 	$(MAKE) it;\
 
+.PHONY: clean
 clean:
 	cd $(LIB);\
 	$(MAKE) clean;\
-	cd ../$(BIN);\
+	cd ../../$(BIN);\
 	$(MAKE) clean; 
-	
+
+.PHONY: install 
 install: it
 	cd $(LIB);\
 	$(MAKE) install;\
-	cd ../$(BIN);\
+	cd ../../$(BIN);\
 	$(MAKE) install; 
 
+.PHONY: depend 
 depend: 
 	cd $(LIB);\
 	$(MAKE) depend;\
-	cd ../$(BIN);\
+	cd ../../$(BIN);\
 	$(MAKE) depend; 
