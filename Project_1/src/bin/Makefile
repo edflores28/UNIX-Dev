@@ -1,3 +1,9 @@
+#
+# Project:    Homework 1
+# Programmer: Edwin Flores
+# Course:     EN.605.414.81
+# Purpose:    Makefile that creates all programs.
+#
 CENTDIR=./conv_to_cent
 FAHRDIR=./conv_to_fahr
 

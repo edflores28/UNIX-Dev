@@ -1,3 +1,10 @@
+#
+# Project:    Homework 1
+# Programmer: Edwin Flores
+# Course:     EN.605.414.81
+# Purpose:    Makefile that creates the arg and temp_conv
+# 	      libraries
+#
 ARGDIR=./arg
 TEMPCONVDIR=./temp_conv
 
