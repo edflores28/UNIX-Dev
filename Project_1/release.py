@@ -1,7 +1,14 @@
+#
+# Project:    Homework 1
+# Programmer: Edwin Flores
+# Course:     EN.605.414.81
+# Purpose:    Python script that creates either a binary or source release
+#
 import argparse
 import sys
 import socket
 import subprocess
+import platform
 
 parser = argparse.ArgumentParser()
 
@@ -17,11 +24,14 @@ if no_arg == False:
     sys.exit(0)
 
 host = socket.gethostname()
+print(platform.platform())
 
 if host == "absaroka":
     make = 'gmake'
 else:
     make = 'make';
+
+# Perform a clean and create a tar file with all files and the directory structure
 
 if args.s == True:
     user_in = raw_input('Create a source release (Y/N):') 
@@ -29,10 +39,15 @@ if args.s == True:
         subprocess.call([make,'clean'])
         subprocess.call(['tar','cvf','homework1.tar','bin','include','lib','src'])
 
+# Performs a clean and install and creates a tar file of just the bin directory
+# and the executables
+
 if args.b == True:
     user_in = raw_input('Create a binary release (Y/N):') 
     if user_in == "Y":
         user_in = raw_input('Enter hostname (default=' + host +')')
         if user_in:
             host = user_in
-        print(host)
+        subprocess.call([make,'clean'])
+        subprocess.call([make,'install'])
+        subprocess.call(['tar','cvf','homework1'+host+'.tar'])
