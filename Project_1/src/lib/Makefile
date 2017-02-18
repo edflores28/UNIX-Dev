@@ -5,8 +5,8 @@
 # Purpose:    Makefile that creates the arg and temp_conv
 # 	      libraries
 #
-ARGDIR=/arg
-TEMPCONVDIR=/temp_conv
+ARGDIR=arg
+TEMPCONVDIR=temp_conv
 
 it:
 	@echo !!! Creating libraries !!!
