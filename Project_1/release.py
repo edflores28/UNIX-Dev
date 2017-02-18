@@ -25,11 +25,6 @@ if no_arg == False:
 
 platform = platform.platform()
 
-if "Linux" in platform:
-    make = 'make';
-else:
-    make = 'gmake'
-
 # Perform a clean and create a tar file with all files and the directory structure
 
 if args.s == True:
