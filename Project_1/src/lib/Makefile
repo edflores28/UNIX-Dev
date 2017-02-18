@@ -9,17 +9,17 @@ ARGDIR=./arg
 TEMPCONVDIR=./temp_conv
 
 it:
-	$(MAKE) -C $(ARGDIR) it
-	$(MAKE) -C $(TEMPCONVDIR) it
+	$(MAKE) --directory=$(ARGDIR) it
+	$(MAKE) --directory=$(TEMPCONVDIR) it
 
 clean:
-	$(MAKE) -C $(ARGDIR) clean
-	$(MAKE) -C $(TEMPCONVDIR) clean 
+	$(MAKE) --directory=$(ARGDIR) clean
+	$(MAKE) --directory=$(TEMPCONVDIR) clean 
 	
 install: 
-	$(MAKE) -C $(ARGDIR) install
-	$(MAKE) -C $(TEMPCONVDIR) install
+	$(MAKE) --directory=$(ARGDIR) install
+	$(MAKE) --directory=$(TEMPCONVDIR) install
 
 depend: 
-	$(MAKE) -C $(ARGDIR) depend
-	$(MAKE) -C $(TEMPCONVDIR) depend 
+	$(MAKE) --directory=$(ARGDIR) depend
+	$(MAKE) --directory=$(TEMPCONVDIR) depend 
