@@ -4,8 +4,8 @@
 # Course:     EN.605.414.81
 # Purpose:    Makefile that creates all programs.
 #
-CENTDIR=./conv_to_cent
-FAHRDIR=./conv_to_fahr
+CENTDIR=conv_to_cent
+FAHRDIR=conv_to_fahr
 
 it:
 	@echo !!! Creating executables !!!
