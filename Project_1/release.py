@@ -24,12 +24,12 @@ if no_arg == False:
     sys.exit(0)
 
 host = socket.gethostname()
-print(platform.platform())
+platform = platform.platform()
 
-if host == "absaroka":
-    make = 'gmake'
+if "Linux" in platform:
+make = 'make';
 else:
-    make = 'make';
+make = 'gmake'
 
 # Perform a clean and create a tar file with all files and the directory structure
 
@@ -48,6 +48,7 @@ if args.b == True:
         user_in = raw_input('Enter hostname (default=' + host +')')
         if user_in:
             host = user_in
+	filename = 'homework1_'+host+'.tar'
         subprocess.call([make,'clean'])
         subprocess.call([make,'install'])
-        subprocess.call(['tar','cvf','homework1'+host+'.tar'])
+        subprocess.call(['tar','cvf',filename,'bin'])
