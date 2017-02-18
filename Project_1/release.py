@@ -32,7 +32,7 @@ if args.s == True:
 if args.b == True:
     user_in = raw_input('Create a binary release (Y/N):') 
     if user_in == "Y":
-        user_in = raw_input('Enter hostname (default=',host,')')
+        user_in = raw_input('Enter hostname (default=' + host +')')
         if user_in:
             host = user_in
         print(host)
