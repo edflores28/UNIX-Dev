@@ -9,8 +9,11 @@ ARGDIR=./arg
 TEMPCONVDIR=./temp_conv
 
 it:
-	$(MAKE) --directory=$(ARGDIR) it
-	$(MAKE) --directory=$(TEMPCONVDIR) it
+	cd $(ARGDIR);\
+	$(MAKE) it;\
+	cd ../$(TEMPCONVDIR);\
+	$(MAKE) it;\
+	cd ..;\
 
 clean:
 	$(MAKE) --directory=$(ARGDIR) clean
