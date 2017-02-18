@@ -23,13 +23,12 @@ if no_arg == False:
     print ("There was no valid argument")
     sys.exit(0)
 
-host = socket.gethostname()
 platform = platform.platform()
 
 if "Linux" in platform:
-make = 'make';
+    make = 'make';
 else:
-make = 'gmake'
+    make = 'gmake'
 
 # Perform a clean and create a tar file with all files and the directory structure
 
@@ -45,10 +44,11 @@ if args.s == True:
 if args.b == True:
     user_in = raw_input('Create a binary release (Y/N):') 
     if user_in == "Y":
+        host = socket.gethostname()
         user_in = raw_input('Enter hostname (default=' + host +')')
         if user_in:
             host = user_in
-	filename = 'homework1_'+host+'.tar'
+        filename = 'homework1_'+host+'.tar'
         subprocess.call([make,'clean'])
         subprocess.call([make,'install'])
         subprocess.call(['tar','cvf',filename,'bin'])
