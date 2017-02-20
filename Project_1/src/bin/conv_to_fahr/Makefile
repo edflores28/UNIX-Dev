@@ -47,6 +47,3 @@ depend: $(SRCS)
 	rm -f $(DEPEND)
 
 # DO NOT DELETE THIS LINE - make depend uses it
-conv_to_fahr.o: conv_to_fahr.cpp ../../../include/fahr_convert.h
-
-../../../include/fahr_convert.h:
