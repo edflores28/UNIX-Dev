@@ -1,4 +1,6 @@
-typedef enum {INFO. WARNING, FATAL} Levels;
+#include <string>
+
+typedef enum {INFO, WARNING, FATAL} Levels;
 
 int log_event(Levels I, const char *fmt, ...);
 
