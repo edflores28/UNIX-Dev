@@ -34,9 +34,6 @@ int openFile (string log)
 
 	fd = open(buffer, O_APPEND|O_CREAT|O_WRONLY, 0644);
 
-//	temp = fchmod(fd, 666);
-//	cout << temp << "chmod" << endl;
-
 	return fd;
 }
 
@@ -87,8 +84,6 @@ int log_event(Levels I, const char *fmt, ...)
 	strcpy(buffer, fullString.c_str());
 
 	bytesWritten = write(fd, buffer, fullString.length());
-
-	cout << "FD: " << fd << " Bytes: " << bytesWritten << endl;
 
 	return 1;
 }
