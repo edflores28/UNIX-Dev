@@ -12,8 +12,15 @@ all: it
 %.o: %.cpp
 	g++ $(CFLAGS) $<
 
-it: $(OBJ)
-.PHONY: clean
+$(LIBNAME): $(OBJ)
+	ar rcs $(LIBNAME) $(OBJ)
 
+.PHONY: it
+it: $(LIBNAME)
+
+install: it
+	install -C -m 775 $(LIBNAME) $(LIB)
+
+.PHONY: clean
 clean:
-	rm -f *.o
+	rm -f *.o *.a $(LIB)/$(LIBNAME)
