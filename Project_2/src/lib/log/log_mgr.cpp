@@ -27,9 +27,7 @@ const char* getText(Levels value)
 int openFile (string log)
 {
 	char buffer[BUFFER_SIZE];
-	int temp = -1;
 
-	memset(&buffer[0], 0, sizeof(buffer));
 	strcpy(buffer, logName.c_str());
 
 	fd = open(buffer, O_APPEND|O_CREAT|O_WRONLY, 0644);
@@ -37,55 +35,69 @@ int openFile (string log)
 	return fd;
 }
 
-int log_event(Levels I, const char *fmt, ...)
+string formatLog (Levels I, const char *fmt, char *args)
 {
 	// Declare all the variables.
 	time_t rawtime;
 	struct tm * timeinfo;
-	char buffer [256];
-	va_list args;
-	string fullString;
 	string formatted;
-	ssize_t bytesWritten = -1;
+	char buffer[BUFFER_SIZE];
 
 	// Obtain the current time.
 	time (&rawtime);
 	timeinfo = localtime (&rawtime);
 
 	// Format the time and append it to the string.
-	strftime (buffer, 256,"%b %d %T %Z %G:", timeinfo);
+	strftime (buffer, BUFFER_SIZE,"%b %d %T %Z %G:", timeinfo);
 	
-	fullString.append(string(buffer));
+	formatted.append(string(buffer));
 	
 	// Append the level to the string
-	fullString.append(getText(I));
+	formatted.append(getText(I));
 	
 	// Clear the buffer.
 	memset(&buffer[0], 0, sizeof(buffer));
+
+	// Append the arguments and formatting to the string.
+	formatted.append(1u,':');
+	formatted.append(string(buffer));
+	formatted.append(1u, '\n');
+
+	return formatted;
+}
+
+int log_event(Levels I, const char *fmt, ...)
+{
+	ssize_t bytesWritten = -1;
+	string formatted;
+	char buffer [BUFFER_SIZE];
+	va_list args;
+	
+
+	if (fd == -1)
+	{
+		openFile(logName);
+		if (fd == -1)
+			return -1;
+	}
 
 	// Obtain the arguments to the function.
 	va_start (args, fmt);
 	vsprintf (buffer, fmt, args);
 
-	// Append the arguments to the string
-	fullString.append(1u,':');
-	fullString.append(string(buffer));
-	fullString.append(1u, '\n');
-
-	cout << fullString << endl;
+	// Obtain the formatted string.
+	formatted = formatLog(I, fmt, buffer);
 	
+	// Cleanr the buffer.
 	memset(&buffer[0], 0, sizeof(buffer));
-	strcpy(buffer, logName.c_str());
-	
-	if (fd == -1)
-		openFile(logName);
+	strcpy(buffer, formatted.c_str());
 
-	memset(&buffer[0], 0, sizeof(buffer));
-	strcpy(buffer, fullString.c_str());
+	bytesWritten = write(fd, buffer, formatted.length());
 
-	bytesWritten = write(fd, buffer, fullString.length());
+	if (bytesWritten == -1)
+		return -1;
 
-	return 1;
+	return 0;
 }
 
 int set_logfile(const char *logfile_name)
