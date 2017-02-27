@@ -73,7 +73,9 @@ int log_event(Levels I, const char *fmt, ...)
 	char buffer [BUFFER_SIZE];
 	va_list args;
 	
-
+	// If there is an invalid file descriptor attemp to open
+	// the file with the current logfile name.
+	// If the logfile cannot be opened return 
 	if (fd == -1)
 	{
 		openFile(logName);
@@ -92,8 +94,11 @@ int log_event(Levels I, const char *fmt, ...)
 	memset(&buffer[0], 0, sizeof(buffer));
 	strcpy(buffer, formatted.c_str());
 
+	// Write to the file.
 	bytesWritten = write(fd, buffer, formatted.length());
 
+	// Return if there was an error writing to the
+	// logfile.
 	if (bytesWritten == -1)
 		return -1;
 
@@ -104,6 +109,8 @@ int set_logfile(const char *logfile_name)
 {
 	logName = string(logfile_name);
 	
+	// Return an error if there was an error
+	// opening the logfile.
 	if (openFile(logName) == -1)
 		return -1;
 
