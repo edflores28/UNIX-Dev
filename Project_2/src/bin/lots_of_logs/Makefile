@@ -34,7 +34,7 @@ install: it
 	@echo !!! test_log installed !!!
 .PHONY: clean
 clean:
-	rm -f *.o *.mk $(BIN)/$(EXE)
+	rm -f *.o *.mk $(EXE) $(BIN)/$(EXE)
 	sed -e '1,/^# DO NOT DELETE/!d' Makefile > mm.tmp
 	mv mm.tmp Makefile
 	@echo !!! Directories cleaned !!!
