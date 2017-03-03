@@ -9,7 +9,7 @@ LIB=../../../lib
 BIN=../../../bin
 SRC=lots_of_logs.c
 OBJ=$(SRC:.c=.o)
-LIBNAME=log
+LIBNAME=log_mgr
 EXE=lots_of_logs
 DEPEND=depend.mk
 

@@ -9,7 +9,7 @@ LIB=../../../lib
 
 SRC=log_mgr.cpp
 OBJ=$(SRC:.cpp=.o)
-LIBNAME=liblog.a
+LIBNAME=liblog_mgr.a
 DEPEND=depend.mk
 
 CFLAGS= -c -g -I$(INCLUDE)
