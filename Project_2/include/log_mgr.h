@@ -1,3 +1,23 @@
+/*
+ *Project: homework 2
+ *
+ *Library: log_mgr - log manager library
+ *File Name: log_mgr.cpp
+ *Purpose: provides utilities that allow setting logfile names, closing
+ *         logfiles, and writing to logfiles.
+ *
+ *Synopsis (Usage and Parameters):
+ *	
+ *	logEvents (Levels, const char, ...)
+ *
+ * 	setLogfile (const char)
+ *
+ * 	closeLogfile ()
+ *
+ *Programmer: Edwin Flores
+ *Course: EN.605.414.81
+ *
+ */
 #include <string>
 
 typedef enum {INFO, WARNING, FATAL} Levels;
