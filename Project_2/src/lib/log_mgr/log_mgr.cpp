@@ -1,40 +1,86 @@
-#include <fcntl.h>
+/*
+ *Project: homework 2
+ *
+ *Library: log_mgr - log manager library
+ *File Name: log_mgr.cpp
+ *Purpose: provides utilities that allow setting logfile names, closing
+ *         logfiles, and writing to logfiles.
+ *
+ *Synopsis (Usage and Parameters):
+ *	
+ *	logEvents (Levels, const char, ...)
+ *
+ * 	setLogfile (const char)
+ *
+ * 	closeLogfile ()
+ *
+ *Programmer: Edwin Flores
+ *Course: EN.605.414.81
+ *
+ */
 #include <algorithm>
 #include <iostream>
-#include <unistd.h>
+#include <fcntl.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
-#include "log_mgr.h"
 #include <sys/stat.h>
+#include <time.h>
+#include <unistd.h>
+#include "log_mgr.h"
 
+// Constant value for the buffer size.
 #define BUFFER_SIZE 256
 
 using namespace std;
 
-
+// Constant array for the string representation of 
+// Levels.
 static const char *enumText[] = {"INFO", "WARNING", "FATAL"};
 
+// Global variables.
 string logName = "logfile";
 int fd = -1;
 
+// This function obtains the text representation of Levels.
 const char* getText(Levels value)
 {
 	return enumText[value];
 }
 
+// This function takes a converts a string to char array. When
+// the string is larger than BUFFER_SIZE the string will be 
+// truncated.
+void copyString (char *arry, string value)
+{
+	size_t totalSize = value.length();
+
+	cout << "totalSize: " << totalSize << " "  << sizeof(value) << endl;
+
+	if (totalSize > BUFFER_SIZE)
+		totalSize = BUFFER_SIZE;
+
+	strncpy(arry, value.c_str(), totalSize);
+}
+
+// This function opens a file.
 int openFile (string log)
 {
 	char buffer[BUFFER_SIZE];
 
-	strcpy(buffer, logName.c_str());
+	// Clear the buffer.
+	memset(&buffer[0], 0, sizeof(buffer));
+	
+	// Copy the logName value into the buffer
+	copyString(buffer, log);
 
 	fd = open(buffer, O_APPEND|O_CREAT|O_WRONLY, 0644);
 
 	return fd;
 }
 
+// This function obtains the raw log entry and converts it
+// to the formatted log entry.
 string formatLog (Levels I, const char *fmt, char *args)
 {
 	// Declare all the variables.
@@ -60,7 +106,7 @@ string formatLog (Levels I, const char *fmt, char *args)
 
 	// Append the arguments and formatting to the string.
 	formatted.append(1u,':');
-	formatted.append(string(buffer));
+	formatted.append(string(args));
 	formatted.append(1u, '\n');
 
 	return formatted;
@@ -90,14 +136,14 @@ int log_event(Levels I, const char *fmt, ...)
 	// Obtain the formatted string.
 	formatted = formatLog(I, fmt, buffer);
 	
-	// Cleanr the buffer.
+	// Clear the buffer.
 	memset(&buffer[0], 0, sizeof(buffer));
-	strcpy(buffer, formatted.c_str());
+	copyString(buffer, formatted);
 
 	// Write to the file.
 	bytesWritten = write(fd, buffer, formatted.length());
 
-	// Return if there was an error writing to the
+	// Return an error if there was an error writing to the
 	// logfile.
 	if (bytesWritten == -1)
 		return -1;
