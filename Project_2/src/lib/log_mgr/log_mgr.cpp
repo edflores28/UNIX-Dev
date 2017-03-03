@@ -55,8 +55,6 @@ void copyString (char *arry, string value)
 {
 	size_t totalSize = value.length();
 
-	cout << "totalSize: " << totalSize << " "  << sizeof(value) << endl;
-
 	if (totalSize > BUFFER_SIZE)
 		totalSize = BUFFER_SIZE;
 
