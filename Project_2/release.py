@@ -33,7 +33,7 @@ if args.s == True:
     if user_in == "Y":
         dir = os.getcwd()
         subprocess.call(['make','clean'])
-        subprocess.call(['tar','cvf','homework1.tar',dir, "--exclude='*.tar'"])
+        subprocess.call(['tar','cvf','homework1.tar',"--exclude='*.tar'",dir])
 
 # Performs a clean and install and creates a tar file of just the bin directory
 # and the executables
