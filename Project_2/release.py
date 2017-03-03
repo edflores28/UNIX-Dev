@@ -1,10 +1,11 @@
 #
-# Project:    Homework 1
+# Project:    Homework 2
 # Programmer: Edwin Flores
 # Course:     EN.605.414.81
 # Purpose:    Python script that creates either a binary or source release
 #
 import argparse
+import os
 import sys
 import socket
 import subprocess
@@ -30,8 +31,9 @@ platform = platform.platform()
 if args.s == True:
     user_in = raw_input('Create a source release (Y/N):') 
     if user_in == "Y":
+        dir = os.getcwd()
         subprocess.call(['make','clean'])
-        subprocess.call(['tar','cvf','homework1.tar','bin','include','lib','src'])
+        subprocess.call(['tar','cvf','homework1.tar',dir])
 
 # Performs a clean and install and creates a tar file of just the bin directory
 # and the executables
