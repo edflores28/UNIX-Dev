@@ -45,7 +45,7 @@ if args.b == True:
         user_in = raw_input('Enter hostname (default=' + host +')')
         if user_in:
             host = user_in
-        filename = 'homework1_'+host+'.tar'
+        filename = 'homework2_'+host+'.tar'
         subprocess.call(['make','clean'])
         subprocess.call(['make','install'])
         subprocess.call(['tar','cvf',filename,'bin'])
