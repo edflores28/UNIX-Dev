@@ -1,3 +1,14 @@
+/*
+ *Project: homework 2
+ *
+ *Progam: test_log2 - creates and writes a lot logfiles
+ *File Name: test_log2.c
+ *Purpose: Generates different events to the logfile
+ *
+ *Programmer: Edwin Flores
+ *Course: EN.605.414.81
+ *
+ */
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>

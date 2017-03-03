@@ -1,3 +1,14 @@
+/*
+ *Project: homework 2
+ *
+ *Progam: lots_of_logs - creates and writes big logfile
+ *File Name: lots_logs.c
+ *Purpose: Generates differents events to the logfile
+ *
+ *Programmer: Edwin Flores
+ *Course: EN.605.414.81
+ *
+ */
 #include <unistd.h>
 #include <stdlib.h>
 #include "log_mgr.h"
