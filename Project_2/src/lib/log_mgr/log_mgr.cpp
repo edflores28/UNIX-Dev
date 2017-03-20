@@ -39,8 +39,8 @@ using namespace std;
 static const char *enumText[] = {"INFO", "WARNING", "FATAL"};
 
 // Global variables.
-string logName = "logfile";
-int fd = -1;
+string LogName = "logfile";
+int Fd = -1;
 
 // This function obtains the text representation of Levels.
 const char* getText(Levels value)
@@ -65,16 +65,23 @@ void copyString (char *arry, string value)
 int openFile (string log)
 {
 	char buffer[BUFFER_SIZE];
+	int tempFd = -1;
 
 	// Clear the buffer.
 	memset(&buffer[0], 0, sizeof(buffer));
 	
-	// Copy the logName value into the buffer
+	// Copy the LogName value into the buffer
 	copyString(buffer, log);
 
-	fd = open(buffer, O_APPEND|O_CREAT|O_WRONLY, 0644);
+	tempFd = open(buffer, O_APPEND|O_CREAT|O_WRONLY, 0644);
 
-	return fd;
+	if (tempFd == -1)
+	{
+		perror("There was an error");
+		return -1;
+	}
+
+	return tempFd;
 }
 
 // This function obtains the raw log entry and converts it
@@ -116,15 +123,19 @@ int log_event(Levels I, const char *fmt, ...)
 	string formatted;
 	char buffer [BUFFER_SIZE];
 	va_list args;
-	
+	int tempFd = -1;
+
 	// If there is an invalid file descriptor attemp to open
 	// the file with the current logfile name.
-	// If the logfile cannot be opened return 
-	if (fd == -1)
+	// If the logfile cannot be opened return otherwise
+	// set the file descriptor.
+	if (Fd == -1)
 	{
-		openFile(logName);
-		if (fd == -1)
+		tempFd = openFile(LogName);
+		if (tempFd == -1)
 			return -1;
+
+		Fd = tempFd;
 	}
 
 	// Obtain the arguments to the function.
@@ -139,7 +150,7 @@ int log_event(Levels I, const char *fmt, ...)
 	copyString(buffer, formatted);
 
 	// Write to the file.
-	bytesWritten = write(fd, buffer, formatted.length());
+	bytesWritten = write(Fd, buffer, formatted.length());
 
 	// Return an error if there was an error writing to the
 	// logfile.
@@ -151,18 +162,30 @@ int log_event(Levels I, const char *fmt, ...)
 
 int set_logfile(const char *logfile_name)
 {
-	logName = string(logfile_name);
+	string tempLog = string(logfile_name);
+	int tempFd = -1;
+
+	// Attempt to open the logfile
+	tempFd = openFile(tempLog);
 	
 	// Return an error if there was an error
 	// opening the logfile.
-	if (openFile(logName) == -1)
+	if (tempFd == -1)
 		return -1;
+
+	// Set the log name, file descriptor and
+	// close the previous file.
+	close(Fd);
+	LogName = tempLog;
+	Fd = tempFd;
 
 	return 0;
 }
 
 void close_logfile(void)
 {
-	close(fd);
+	// Close the log file and reset the descriptor
+	close(Fd);
+	Fd = -1;
 }
 

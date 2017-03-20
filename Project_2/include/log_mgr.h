@@ -20,6 +20,9 @@
  */
 #include <string>
 
+// Global Variables
+extern std::string LogName;
+
 typedef enum {INFO, WARNING, FATAL} Levels;
 
 int log_event(Levels I, const char *fmt, ...);
