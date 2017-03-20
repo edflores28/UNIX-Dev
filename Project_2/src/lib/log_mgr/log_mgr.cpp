@@ -77,7 +77,7 @@ int openFile (string log)
 
 	if (tempFd == -1)
 	{
-		perror("There was an error");
+		perror("There was a file error");
 		return -1;
 	}
 
@@ -155,7 +155,10 @@ int log_event(Levels I, const char *fmt, ...)
 	// Return an error if there was an error writing to the
 	// logfile.
 	if (bytesWritten == -1)
+	{	
+		perror("There was a writing error");
 		return -1;
+	}
 
 	return 0;
 }
