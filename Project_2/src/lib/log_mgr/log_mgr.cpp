@@ -78,7 +78,7 @@ int openFile (string log)
 	if (tempFd == -1)
 	{
 		perror("There was a file error");
-		return -1;
+		return ERROR;
 	}
 
 	return tempFd;
@@ -133,7 +133,7 @@ int log_event(Levels I, const char *fmt, ...)
 	{
 		tempFd = openFile(LogName);
 		if (tempFd == -1)
-			return -1;
+			return ERROR;
 
 		Fd = tempFd;
 	}
@@ -157,10 +157,10 @@ int log_event(Levels I, const char *fmt, ...)
 	if (bytesWritten == -1)
 	{	
 		perror("There was a writing error");
-		return -1;
+		return ERROR;
 	}
 
-	return 0;
+	return OK;
 }
 
 int set_logfile(const char *logfile_name)
@@ -174,7 +174,7 @@ int set_logfile(const char *logfile_name)
 	// Return an error if there was an error
 	// opening the logfile.
 	if (tempFd == -1)
-		return -1;
+		return ERROR;
 
 	// Set the log name, file descriptor and
 	// close the previous file.
@@ -182,7 +182,7 @@ int set_logfile(const char *logfile_name)
 	LogName = tempLog;
 	Fd = tempFd;
 
-	return 0;
+	return OK;
 }
 
 void close_logfile(void)

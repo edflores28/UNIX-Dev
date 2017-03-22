@@ -20,6 +20,10 @@
  */
 #include <string>
 
+// Definition for the return statuses.
+#define ERROR -1
+#define OK 0
+
 // Global Variables
 extern std::string LogName;
 
