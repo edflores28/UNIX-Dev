@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 #include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
 #include "thread_mgr.h"
 
@@ -37,6 +38,30 @@ std::vector<ThreadInfo> ThreadList;
 // the thread.
 int CreatedThreads = 0;
 
+bool initial = true;
+
+void intHandler(int s)
+{
+	if (!ThreadList.empty())	
+		for (int i = 0; i < ThreadList.size(); i++)
+			std::cout << "Handle: " << ThreadList[i].handle << " Name: " 
+				  << ThreadList[i].name << std::endl;
+	else
+		std::cout << "There are no threads being managed" << std::endl;
+
+	// Reinstall the signal handler
+	signal(SIGINT, intHandler);
+}
+
+void quitHandler (int s)
+{
+	std::cout << "Quit handler" << std::endl;
+
+	int B = th_kill_all();
+	// Reinstall the signal handler
+	signal(SIGQUIT, quitHandler);
+}
+
 int search (ThreadHandles handle)
 {
 	for (int i = 0; i < ThreadList.size(); i++)
@@ -52,7 +77,15 @@ ThreadHandles th_execute (Funcptrs ptr)
 	pthread_t thread;
 	int retVal = -1;
 
+	// Install signal handlers on the initial execute call.
+	if (initial)
+	{
+		signal(SIGINT, intHandler);
+		signal(SIGQUIT, quitHandler);
+		initial = false;
+	}
 
+		
 	if (ThreadList.size() < MAX_THREADS)
 	{
 		if ((retVal = pthread_create (&thread, NULL, ptr, NULL)) == 0)
@@ -141,14 +174,13 @@ int th_kill_all (void)
 int th_exit (void)
 {
 	pthread_t thread = pthread_self();
-	std::cout << "EXIT CALLED; " << thread << std::endl;
+	
 	if (!ThreadList.empty())
 	{
 		// Cancel all the threads that are currently in the list.
 		for (int i = 0; i < ThreadList.size(); i++)
 			if (ThreadList[i].thread == thread)
 			{
-				std::cout << "found the ID" << std::endl;
 				pthread_exit(NULL);
 			}
 
