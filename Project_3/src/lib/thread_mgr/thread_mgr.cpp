@@ -55,9 +55,8 @@ void intHandler(int s)
 
 void quitHandler (int s)
 {
-	std::cout << "Quit handler" << std::endl;
+	int retVal = th_kill_all();
 
-	int B = th_kill_all();
 	// Reinstall the signal handler
 	signal(SIGQUIT, quitHandler);
 }
@@ -188,7 +187,4 @@ int th_exit (void)
 	}
 	
 	return THD_ERROR;
-
 }
-
-
