@@ -22,11 +22,19 @@
 
 #define MAX_THREADS 50
 
+// Enumerations for the thread status.
+typedef enum {RUNNING, CANCELED} Status;
+
+// Constant array for the string representation of 
+// thread statuses
+static const char *enumText[] = {"RUNNING", "CANCELED"};
+
 // Structure that contains the threads information.
 struct ThreadInfo
 {
 	ThreadHandles handle;
 	std::string name;
+	Status status;
 	pthread_t thread;
 };
 
@@ -40,12 +48,20 @@ int CreatedThreads = 0;
 
 bool initial = true;
 
+// This function obtains the text representation of Levels.
+const char* getText(Status value)
+{
+	return enumText[value];
+}
+
 void intHandler(int s)
 {
 	if (!ThreadList.empty())	
 		for (int i = 0; i < ThreadList.size(); i++)
-			std::cout << "Handle: " << ThreadList[i].handle << " Name: " 
-				  << ThreadList[i].name << std::endl;
+			std::cout << "Handle: " << ThreadList[i].handle
+				  << " Name: " <<ThreadList[i].name
+				  << " Status: " << getText(ThreadList[i].status) 
+				  << std::endl;
 	else
 		std::cout << "There are no threads being managed" << std::endl;
 
@@ -59,6 +75,20 @@ void quitHandler (int s)
 
 	// Reinstall the signal handler
 	signal(SIGQUIT, quitHandler);
+}
+
+int cancel (int idx)
+{
+	int retVal = -1;
+
+	ThreadList[idx].status = CANCELED;
+
+	if ((retVal = pthread_cancel(ThreadList[idx].thread)) == 0)
+	{
+		return THD_OK;
+	}
+	perror("There was an error cancelling the thread");
+	return THD_ERROR;
 }
 
 int search (ThreadHandles handle)
@@ -96,7 +126,8 @@ ThreadHandles th_execute (Funcptrs ptr)
 			threadInfo.handle = ++CreatedThreads;
 			threadInfo.name = "THREAD" + std::to_string(CreatedThreads);
 			threadInfo.thread = thread;
-			
+			threadInfo.status = RUNNING;
+
 			ThreadList.insert(it, threadInfo);
 
 			return threadInfo.handle;
@@ -142,28 +173,26 @@ int th_wait_all (void)
 int th_kill (ThreadHandles handle) 
 {
 	int idxVal = -1;
-	int retVal = -1;
 
 	if ((idxVal = search(handle)) == THD_ERROR)
 		return THD_ERROR;
 
-	if ((retVal = pthread_cancel(ThreadList[idxVal].thread)) == 0)
-	{
-		std::cout << "canceled a thread" << std::endl;
-		return THD_OK;
-	}
-	perror("There was an error cancelling the thread");
-	return THD_ERROR;
+	return cancel(idxVal);
 }
 
 int th_kill_all (void)
 {
+	int retVal = -1;
+
 	if (!ThreadList.empty())
 	{
 		// Cancel all the threads that are currently in the list.
 		for (int i = 0; i < ThreadList.size(); i++)
-			pthread_cancel(ThreadList[i].thread);
-	
+		{
+
+			retVal = cancel(i);
+		}
+
 		return THD_OK;
 	}
 	
