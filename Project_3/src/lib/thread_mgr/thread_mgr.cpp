@@ -71,6 +71,7 @@ void intHandler(int s)
 
 void quitHandler (int s)
 {
+	// ***** THIS NEEDS TO BE UPDATED, THIS IS NOT REENTRANT	
 	int retVal = th_kill_all();
 
 	// Reinstall the signal handler
