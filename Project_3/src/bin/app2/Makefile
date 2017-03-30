@@ -1,5 +1,5 @@
 #
-# Project:    Homework 2
+# Project:    Homework 3
 # Programmer: Edwin Flores
 # Course:     EN.605.414.81
 # Purpose:    Makefile that creates the app2 executable
@@ -9,17 +9,18 @@ LIB=../../../lib
 BIN=../../../bin
 SRC=app2.cpp
 OBJ=$(SRC:.cpp=.o)
-LIBNAMES=-lthread_mgr -llog_mgr -larg
+LIBNAMES=-lthread_mgr -llog_mgr
 EXE=app2
 DEPEND=depend.mk
+STD=-std=c++11
 
 CC=g++
-CFLAGS=-g -Wall -I$(INCLUDE)
+CFLAGS=$(STD) -g -Wall -I$(INCLUDE)
 
 all: it
 
 %.o: %.cpp
-	$(CC) -c $(CFLAGS) $<
+	$(CC) -c $(STD) $(CFLAGS) $<
 
 $(EXE): $(OBJ)
 	$(CC) $(CFLAGS) -pthread -L$(LIB) $(SRC) -o $(EXE) $(LIBNAMES)
