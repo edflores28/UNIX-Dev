@@ -26,12 +26,12 @@ $(EXE): $(OBJ)
 
 .PHONY: it
 it: $(EXE)
-	@echo !!! test_log built !!!
+	@echo !!! $(EXE) built !!!
 
 .PHONY: install
 install: it
 	install -C $(EXE) $(BIN)
-	@echo !!! app1 installed !!!
+	@echo !!! $(EXE) installed !!!
 .PHONY: clean
 clean:
 	rm -f *.o *.mk $(EXE) $(BIN)/$(EXE)

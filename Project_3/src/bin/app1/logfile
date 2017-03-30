@@ -1,0 +1,62 @@
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 1 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 2 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 3 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 4 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 5 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 6 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 7 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 8 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 9 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 10 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 11 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Thread with 12 handle was created
+Mar 30 19:20:37 EDT 2017:INFO:Waiting for all threads
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 1 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 1
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 2 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 2
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 3 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 3
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 4 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 4
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 5 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 5
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 6 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 6
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 7 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 7
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 8 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 8
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 9 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 9
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 10 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 10
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 11 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 11
+Mar 30 19:20:42 EDT 2017:INFO:Thread with handle 12 terminated
+Mar 30 19:20:42 EDT 2017:FATAL:There was an error joining thread with handle 12
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 1 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 2 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 3 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 4 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 5 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 6 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 7 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 8 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 9 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 10 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 11 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Thread with 12 handle was created
+Mar 30 19:22:33 EDT 2017:INFO:Waiting for all threads
+Mar 30 19:22:38 EDT 2017:INFO:Thread with handle 1 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 2 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 3 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 4 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 5 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 6 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 7 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 8 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 9 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 10 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 11 terminated
+Mar 30 19:22:39 EDT 2017:INFO:Thread with handle 12 terminated
