@@ -1,5 +1,5 @@
 #
-# Project:    Homework 2
+# Project:    Homework 3
 # Programmer: Edwin Flores
 # Course:     EN.605.414.81
 # Purpose:    Makefile that creates the thread manager
@@ -13,7 +13,7 @@ OBJ=$(SRC:.cpp=.o)
 LIBNAME=libthread_mgr.a
 DEPEND=depend.mk
 
-CFLAGS= -c -g -I$(INCLUDE)
+CFLAGS= -c -g -Wall -L$(LIB) -llog_mgr -I$(INCLUDE)
 
 all: it
 
