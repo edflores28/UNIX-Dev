@@ -6,7 +6,6 @@
  *               kills the threads using the SIGALRM signal.
  *
  *File Name: app2.cpp
- *Purpose: TBD
  *
  *Programmer: Edwin Flores
  *Course: EN.605.414.81
