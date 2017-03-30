@@ -7,12 +7,22 @@
  *
  *Synopsis (Usage and Parameters):
  *	
+ *	ThreadHandles th_execute (Funcptrs);
+ *
+ *	int th_wait (ThreadHandles);
+ *
+ *	int th_wait_all ();
+ *
+ *	int th_kill (ThreadHandles);
+ *
+ *	int th_kill_all ();
+ *
+ *	int th_exit ();
  *
  *Programmer: Edwin Flores
  *Course: EN.605.414.81
  *
  */
-
 // Definition for the return statuses.
 #define THD_ERROR -1
 #define THD_OK 0
