@@ -12,7 +12,7 @@ OBJ=$(SRC:.cpp=.o)
 LIBNAME=liblog_mgr.a
 DEPEND=depend.mk
 
-CFLAGS= -c -std=c++11 -g -I$(INCLUDE)
+CFLAGS= -c -std=c++0x -g -I$(INCLUDE)
 
 all: it
 

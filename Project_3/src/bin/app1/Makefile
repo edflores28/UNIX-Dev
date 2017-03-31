@@ -12,9 +12,10 @@ OBJ=$(SRC:.cpp=.o)
 LIBNAMES=-lthread_mgr -llog_mgr -larg
 EXE=app1
 DEPEND=depend.mk
-
+STD=-std=c++0x
 CC=g++
-CFLAGS=-g -Wall -I$(INCLUDE)
+
+CFLAGS=$(STD) -g -Wall -I$(INCLUDE)
 
 all: it
 
