@@ -24,6 +24,7 @@
  *
  */
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <pthread.h>
@@ -185,8 +186,12 @@ ThreadHandles th_execute (Funcptrs ptr)
 			ThreadInfo threadInfo;
 			std::vector<ThreadInfo>::iterator it = ThreadList.end();
 
+			std::stringstream ss;
+
 			threadInfo.handle = ++CreatedThreads;
-			threadInfo.name = "THREAD" + std::to_string(CreatedThreads);
+			ss << CreatedThreads;
+
+			threadInfo.name = "THREAD" + ss.str();;
 			threadInfo.thread = thread;
 			threadInfo.status = RUNNING;
 
