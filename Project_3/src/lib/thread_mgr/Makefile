@@ -13,7 +13,7 @@ OBJ=$(SRC:.cpp=.o)
 LIBNAME=libthread_mgr.a
 DEPEND=depend.mk
 
-CFLAGS= -c -g -std=c++11 -Wall -L$(LIB) -llog_mgr -I$(INCLUDE)
+CFLAGS= -c -g -std=c++0x -Wall -L$(LIB) -llog_mgr -I$(INCLUDE)
 
 all: it
 
