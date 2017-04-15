@@ -12,6 +12,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string.h>
 #include "common_struct.h"
 #include "shared_mem.h"
 
@@ -33,6 +34,8 @@ int main (int argc, char *argv[])
 	string y_str;
 	string time_str;
 
+	char buffer[26];
+
 	// Variables for the shared data region
 	float x = 0.0;
 	float y = 0.0;
@@ -53,10 +56,20 @@ int main (int argc, char *argv[])
 		istringstream iss (line);
 		iss >> skipws >> index_str >> x_str >> y_str >> time_str;
 
-		x = stof(x_str,NULL);
-		y = stof(y_str.c_str(),NULL);
-		index = stoi(index_str.c_str(),NULL);
-		time = stoi(time_str.c_str(),NULL);
+		strcpy(buffer,x_str.c_str());
+		x = atof(buffer);
+		
+		memset(&buffer[0], 0, sizeof(buffer));
+		strcpy(buffer,y_str.c_str());
+		y = atof(buffer);
+
+		memset(&buffer[0], 0, sizeof(buffer));
+		strcpy(buffer,index_str.c_str());
+		index = atoi(buffer);
+		
+		memset(&buffer[0], 0, sizeof(buffer));
+		strcpy(buffer,time_str.c_str());
+		time = atoi(buffer);
 
 		cout << index << " " << x << " " << y << " " << time << endl;
 	}
