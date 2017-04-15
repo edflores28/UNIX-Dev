@@ -26,27 +26,39 @@ int main (int argc, char *argv[])
 //	}
 
 
-	string test;
+	// Variables for string parsing
+	string line;
+	string index_str;
+	string x_str;
+	string y_str;
+	string time_str;
 
-	string index;
-	string x;
-	string y;
-	string time;
+	// Variables for the shared data region
+	float x = 0.0;
+	float y = 0.0;
+	int time = 0;
+	int index = 0;
 
-	ifstream testing("input_data");
+	ifstream readFile("input_data");
 
-	if (!testing)
+	if (!readFile)
 	{
 		cout << "ERROR OPENING FILE";
 		return 0;
 	}
 
 
-	while (getline(testing, test))
+	while (getline(readFile, line))
 	{
-		istringstream iss (test);
-		iss >> skipws >> index >>  x >> y >> time;
-		cout << index << " " <<  x << " " << y << " " << time << endl;
+		istringstream iss (line);
+		iss >> skipws >> index_str >> x_str >> y_str >> time_str;
+
+		x = strtof(x_str.c_str(),0);
+		y = strtof(y_str.c_str(),0);
+		index = strtol(index_str.c_str(),NULL,0);
+		time = strtol(time_str.c_str(),NULL,0);
+
+		cout << index << " " << x << " " << y << " " << time << endl;
 	}
 
 	return 0;
