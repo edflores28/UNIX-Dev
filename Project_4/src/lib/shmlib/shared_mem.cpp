@@ -34,7 +34,7 @@ void *connect_shm(int key, int size)
 		return NULL;
 	}
 
-	shared = (int *) shmat (shmId, nullptr, 0);
+	shared = (int *) shmat (shmId, NULL, 0);
 
 	if (shared == (int *) -1)
 	{
