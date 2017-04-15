@@ -26,7 +26,7 @@ all: it
 	$(CC) -c $(CFLAGS) $<
 
 $(EXE): $(OBJ)
-	$(CC) $(CFLAGS) -pthread -L$(LIB) $(SRC) -o $(EXE) $(LIBNAMES)
+	$(CC) $(CFLAGS) -L$(LIB) $(SRC) -o $(EXE) $(LIBNAMES)
 
 .PHONY: it
 it: $(EXE)
