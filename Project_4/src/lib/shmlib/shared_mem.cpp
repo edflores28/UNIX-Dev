@@ -31,7 +31,7 @@ void *connect_shm(int key, int size)
 	if ((shmId = shmget(key, size, IPC_CREAT | 0666)) == -1)
 	{
 		perror("shmget error");
-		return nullptr;
+		return NULL;
 	}
 
 	shared = (int *) shmat (shmId, nullptr, 0);
@@ -39,7 +39,7 @@ void *connect_shm(int key, int size)
 	if (shared == (int *) -1)
 	{
 		perror("shmatt error");
-		return nullptr;
+		return NULL;
 	}
 
 	return shared;
