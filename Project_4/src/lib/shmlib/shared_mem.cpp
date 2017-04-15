@@ -17,12 +17,32 @@
  *Course: EN.605.414.81
  *
  */
-
+#include <stdio.h>
+#include <sys/shm.h>
 #include "shared_mem.h"
+
+#define MAX_SEGMENTS 4096
 
 void *connect_shm(int key, int size)
 {
-	return nullptr;
+	int shmId = -1;
+	int *shared;
+
+	if ((shmId = shmget(key, size, IPC_CREAT | 0666)) == -1)
+	{
+		perror("shmget error");
+		return nullptr;
+	}
+
+	shared = (int *) shmat (shmId, nullptr, 0);
+
+	if (shared == (int *) -1)
+	{
+		perror("shmatt error");
+		return nullptr;
+	}
+
+	return shared;
 }
 
 int detach_shm(void *addr)
