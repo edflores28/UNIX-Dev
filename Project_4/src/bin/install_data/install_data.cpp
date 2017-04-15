@@ -13,6 +13,7 @@
 #include <iostream>
 #include <sstream>
 #include <string.h>
+#include <stdlib.h>
 #include "common_struct.h"
 #include "shared_mem.h"
 
