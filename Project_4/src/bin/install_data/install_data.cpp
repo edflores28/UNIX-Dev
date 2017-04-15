@@ -53,10 +53,10 @@ int main (int argc, char *argv[])
 		istringstream iss (line);
 		iss >> skipws >> index_str >> x_str >> y_str >> time_str;
 
-		x = strtof(x_str.c_str(),0);
-		y = strtof(y_str.c_str(),0);
-		index = strtol(index_str.c_str(),NULL,0);
-		time = strtol(time_str.c_str(),NULL,0);
+		x = stof(x_str,NULL);
+		y = stof(y_str.c_str(),NULL);
+		index = stoi(index_str.c_str(),NULL);
+		time = stoi(time_str.c_str(),NULL);
 
 		cout << index << " " << x << " " << y << " " << time << endl;
 	}
