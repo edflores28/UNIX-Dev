@@ -1,15 +1,17 @@
 /*
- *Project: homework 3
  *
- *Progam: install_data - install data into shared memory 
+ *Project: homework 4
  *
- *File Name: install_data.cpp
+ *Progam: monitor_shm - monitor data in shared memory 
+ *
+ *File Name: monitor_shm.cpp
  *
  *Programmer: Edwin Flores
  *Course: EN.605.414.81
  *
  */
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string.h>
@@ -26,12 +28,12 @@ int main (int argc, char *argv[])
 {
 	int monitor = 30;
 
-//	if (argc != 2)
-//	{
-//		std::cout << "Invalid arguments" << std::endl;
-//		return -1;
-//	}
+	if (argc == 2)
+	{
+		monitor = atoi(argv[1]);
+	}
 
+	cout << "monitor: " << monitor << endl;
 
 	int arraySize = sizeof(shared) * 20;
 	
@@ -42,14 +44,34 @@ int main (int argc, char *argv[])
 	shmArry = (shared *) ptr;
 
 
+	float x = 0.0;
+	float y = 0.0;
+	int totalValid = 0;
+
 	while (Counter != monitor)
 	{
-		for (int i = 0; i < 20; i++) 
+		for (int i = 0; i < ARRAY_LENGTH; i++) 
 		{
-			cout << "x: " << shmArry[i].x << "y: " << shmArry[i].y << "valid: " <<shmArry[i].is_valid << endl;
+			if (shmArry[i].is_valid == 1)
+			{
+				totalValid++;
+				x += shmArry[i].x;
+				y += shmArry[i].y;
+			}
 		}
+		
+		if (totalValid == 0)
+			cout << "At time " << Counter << ": no elements are active" << endl;
+		else
+			cout << "At time " << Counter << ": " << totalValid << " elements are active: x = "
+				<< setprecision(4) << x/totalValid << " and y = " << setprecision(4) << y/totalValid << endl;
+		
 		sleep(1);
 		Counter++;
+		x = 0.0;
+		y = 0.0;
+		totalValid = 0;
 	}
+
 	return 0;
 }
