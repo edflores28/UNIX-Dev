@@ -17,6 +17,7 @@
  *Course: EN.605.414.81
  *
  */
+#include <iostream>
 #include <stdio.h>
 #include <sys/shm.h>
 #include "shared_mem.h"
@@ -27,30 +28,61 @@ void *connect_shm(int key, int size)
 {
 	int shmId = -1;
 	int *shared;
+	shmid_ds info;
 
+	// Obtain the shared memory Id.
 	if ((shmId = shmget(key, size, IPC_CREAT | 0666)) == -1)
 	{
 		perror("shmget error");
 		return NULL;
 	}
 
-	shared = (int *) shmat (shmId, NULL, 0);
-
-	if (shared == (int *) -1)
+	// Obtain information about the shared segement.
+	if (shmctl (shmId, IPC_STAT, &info) == -1)
 	{
-		perror("shmatt error");
+		perror("shmctl error");
 		return NULL;
 	}
 
-	return shared;
+	// Only attach to the shared region if the MAX_SEGMENTS
+	// has not been reached.
+	if (info.shm_nattch < MAX_SEGMENTS)
+	{
+		shared = (int *) shmat (shmId, NULL, 0);
+
+		if (shared == (int *) -1)
+		{
+			perror("shmatt error");
+			return NULL;
+		}
+
+		return shared;
+	}
+
+	std::cout << "Maximum segements has been reached, unabled to attach" << std::endl;
+	return NULL;
 }
 
 int detach_shm(void *addr)
 {
+	if (shmdt (addr) == -1)
+	{
+		perror("shmdt error");
+		return ERROR;
+	}
+
 	return OK;
 }
 
 int destroy_shm(int key)
 {
+	int shmId = shmget(1000, 0,0);
+
+	if (shmctl (shmId, IPC_RMID, 0) == -1)
+	{
+		perror("shmdestroy error");
+		return ERROR;
+	}
+
 	return OK;
 }
