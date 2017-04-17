@@ -1,5 +1,5 @@
 /*
- *Project: homework 3
+ *Project: homework 4
  *
  *Progam: install_data - install data into shared memory 
  *
@@ -12,55 +12,95 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <signal.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "common_struct.h"
 #include "shared_mem.h"
 
+#define BUFFER_SIZE 26
+
 using namespace std;
 
-int main (int argc, char *argv[])
+// Global Variables
+void *ShmPtr = NULL;
+string InputFile;
+ifstream ReadFile;
+
+// Setter function to set the input file.
+void setInput (string input)
 {
-//	if (argc != 2)
-//	{
-//		std::cout << "Invalid arguments" << std::endl;
-//		return -1;
-//	}
+	InputFile = input;
+}
+
+// Getter function to get the input file.
+string getInput (void)
+{
+	return InputFile;
+}
+
+// Function that clears out the shared region.
+void clearShared (void)
+{
+	shared *shmArry = (shared *) ShmPtr;
+
+	for (int i = 0; i <= ARRAY_LENGTH; i++)
+	{
+		shmArry[i].x = 0.0;
+		shmArry[i].y = 0.0;
+		shmArry[i].is_valid = 0;
+	}
+}
+
+// SIGINT and SIGTERM signal handler
+void termination (int sig)
+{
+	if (detach_shm(ShmPtr) == OK)
+		cout << "Detached from shared memory" << endl;
+
+	if  (destroy_shm(SHM_KEY) == OK)
+		cout << "Destroyed shared memory" << endl;
+
+	exit(0);
+}
 
 
-	// Variables for string parsing
+void inputProcess (void)
+{
+	// Variables for string parsing and conversion from
+	// string representations to respective types
 	string line;
 	string index_str;
 	string x_str;
 	string y_str;
 	string time_str;
-
-	char buffer[26];
-
-	// Variables for the shared data region
+	char buffer[BUFFER_SIZE];
 	float x = 0.0;
 	float y = 0.0;
 	int time = 0;
 	int index = 0;
 
-	ifstream readFile("input_data");
+	// Variables for the shared region and size
+	shared *shmArry;
+	int arraySize = sizeof(shared) * ARRAY_LENGTH;
 
-	if (!readFile)
+	ReadFile.open(getInput());
+
+	if (!ReadFile)
 	{
 		cout << "ERROR OPENING FILE";
-		return -1;
+		exit(-1);;
 	}
 
-	int arraySize = sizeof(shared) * 20;
-	
-	shared *shmArry;
+	// Connect to the shared region
+	ShmPtr = connect_shm(SHM_KEY, arraySize);
+	shmArry = (shared *) ShmPtr;
 
-	void *ptr = connect_shm(1000, arraySize);
+	// Clear the shared region
+	clearShared();
 
-	shmArry = (shared *) ptr;
-
-	while (getline(readFile, line))
+	while (getline(ReadFile, line))
 	{
 		// Obtain the current line and obtain the string
 		// representations of the values.
@@ -84,26 +124,67 @@ int main (int argc, char *argv[])
 		strcpy(buffer,time_str.c_str());
 		time = atoi(buffer);
 
-		if (time >= 0)
+		// Only do stuff with the converted values
+		// if the index within the valid range.
+		if ((index >= 0) && (index <= 19))
 		{
-			sleep(time);
-			shmArry[index].x = x;
-			shmArry[index].y = y;
-			shmArry[index].is_valid = 1;
+			if (time >= 0)
+			{
+				// Sleep for the amount of time then
+				// install the data into the shared 
+				// region.
+				sleep(time);
+				shmArry[index].x = x;
+				shmArry[index].y = y;
+				shmArry[index].is_valid = 1;
+			}
+			else
+			{
+				// Otherwise the time is negative and
+				// mark the convents of index invalid.
+				time = abs(time);
+				sleep (time);
+				shmArry[index].is_valid = 0;
+			}
 		}
-		else
-		{
-			// Otherwise the time is negative.
-			time = abs(time);
-			sleep (time);
-			shmArry[index].is_valid = 0;
-		}
+	}
+	
+	// Mark the shared area to be destroyed.
+	destroy_shm(SHM_KEY);
+}
+
+// SIGHUP signal handler
+void hangup (int sig)
+{
+	ReadFile.close();
+	inputProcess();
+}
+
+int main (int argc, char *argv[])
+{
+	if (argc != 2)
+	{
+		std::cout << "Invalid arguments" << std::endl;
+		return -1;
 	}
 
-	for (int i = 0; i < 20; i++) 
-	{
-//		cout << "x: " << shmArry[i].x << "y: " << shmArry[i].y << endl;
-	}
+	setInput(argv[1]);
+
+	struct sigaction terminate;
+	struct sigaction old_action;
+	struct sigaction hang;
+
+	terminate.sa_handler = termination;
+	terminate.sa_flags = SA_RESTART;
+
+	hang.sa_handler = hangup;
+	hang.sa_flags = SA_RESTART;
+
+	sigaction(SIGINT, &terminate, &old_action);
+	sigaction(SIGTERM, &terminate, &old_action);
+	sigaction(SIGHUP, &hang, NULL);
+
+	inputProcess();
 
 	return 0;
 }
