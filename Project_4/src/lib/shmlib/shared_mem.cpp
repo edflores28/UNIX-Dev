@@ -102,7 +102,5 @@ int destroy_shm(int key)
 			return ERROR;
 		}
 
-	std::cout << "Math: " << (info.shm_perm.mode & SHM_DEST) << std::endl;
-
 	return OK;
 }
