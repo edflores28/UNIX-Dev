@@ -76,13 +76,33 @@ int detach_shm(void *addr)
 
 int destroy_shm(int key)
 {
-	int shmId = shmget(1000, 0,0);
+	// Obtain the shared memory Id
+	int shmId = -1;
+	shmid_ds info;
 
-	if (shmctl (shmId, IPC_RMID, 0) == -1)
+	if ((shmId = shmget(key, 0,0)) == -1)
 	{
-		perror("shmdestroy error");
+		perror("shmget error in dest function");
 		return ERROR;
 	}
+
+	// Obtain information about the shared segement.
+	if (shmctl (shmId, IPC_STAT, &info) == -1)
+	{
+		perror("shmctl error in dest function");
+		return ERROR;
+	}
+	
+	// Only mark the shared region for destruction
+	// if it has not already been marked
+	if ((info.shm_perm.mode & SHM_DEST) == 0)
+		if (shmctl (shmId, IPC_RMID, 0) == -1)
+		{
+			perror("shmdestroy error");
+			return ERROR;
+		}
+
+	std::cout << "Math: " << (info.shm_perm.mode & SHM_DEST) << std::endl;
 
 	return OK;
 }
