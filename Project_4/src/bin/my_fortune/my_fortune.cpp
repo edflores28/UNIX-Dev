@@ -41,14 +41,13 @@ int main(int argc, char *argv[])
 	int elapsed;
 
 #ifdef __linux__
-	string command = "./fort";
+	string command = "/home/unix_class/fortune_absaroka/fortune";
 #elif __sun
-	string command = "dev";
+	string command = "/home/unix_class/fortune/fortune";
 #else
 	string command = NULL;
 #endif
 
-	cout << command << endl;
 	const char *pcmd = command.c_str();
 
 	while (1)
