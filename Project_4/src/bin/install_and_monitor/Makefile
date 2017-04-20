@@ -12,7 +12,7 @@ BIN=$(PROJECT_ROOT)bin
 EXE=install_and_monitor
 SRC=$(EXE).cpp
 OBJ=$(SRC:.cpp=.o)
-LIBNAMES=-lthread_mgr
+LIBNAMES=-lthread_mgr -llog_mgr
 DEPEND=depend.mk
 STD=-std=c++0x
 CC=g++

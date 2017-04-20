@@ -1,0 +1,9 @@
+Apr 20 16:56:21 EDT 2017:INFO:Thread with 1 handle was created
+Apr 20 16:56:40 EDT 2017:INFO:Thread with 1 handle was created
+Apr 20 16:56:40 EDT 2017:INFO:Waiting for all threads
+Apr 20 16:56:53 EDT 2017:INFO:Thread with handle 1 terminated
+Apr 20 17:08:51 EDT 2017:INFO:Thread with 1 handle was created
+Apr 20 17:08:51 EDT 2017:INFO:Thread with 2 handle was created
+Apr 20 17:08:51 EDT 2017:INFO:Waiting for all threads
+Apr 20 17:09:04 EDT 2017:INFO:Thread with handle 1 terminated
+Apr 20 17:09:22 EDT 2017:INFO:Thread with handle 2 terminated
