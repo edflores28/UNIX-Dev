@@ -27,6 +27,7 @@ using namespace std;
 void *ShmPtr = NULL;
 string InputFile;
 ifstream ReadFile;
+bool Hangup = false;
 
 // Setter function to set the input file.
 void setInput (string input)
@@ -148,16 +149,15 @@ void inputProcess (void)
 			}
 		}
 	}
-	
-	// Mark the shared area to be destroyed.
-	destroy_shm(SHM_KEY);
 }
 
 // SIGHUP signal handler
 void hangup (int sig)
 {
+	// Close the file and force the reading loop
+	// not to execute anymore.
 	ReadFile.close();
-	inputProcess();
+	Hangup = true;
 }
 
 int main (int argc, char *argv[])
@@ -170,10 +170,12 @@ int main (int argc, char *argv[])
 
 	setInput(argv[1]);
 
+	// Variables for the signal hangler.
 	struct sigaction terminate;
 	struct sigaction old_action;
 	struct sigaction hang;
 
+	// Install the signal handlers
 	terminate.sa_handler = termination;
 	terminate.sa_flags = SA_RESTART;
 
@@ -184,7 +186,18 @@ int main (int argc, char *argv[])
 	sigaction(SIGTERM, &terminate, &old_action);
 	sigaction(SIGHUP, &hang, NULL);
 
+restart:
+
 	inputProcess();
+
+	if (Hangup)
+	{
+		Hangup = false;
+		goto restart;
+	}
+
+	// Mark the shared area to be destroyed.
+	destroy_shm(SHM_KEY);
 
 	return 0;
 }
