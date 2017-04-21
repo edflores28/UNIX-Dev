@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "common_struct.h"
+#include "log_mgr.h"
 #include "shared_mem.h"
 
 #define BUFFER_SIZE 26
@@ -39,6 +40,13 @@ void setInput (string input)
 string getInput (void)
 {
 	return InputFile;
+}
+
+// Function that logs an event
+void event (Levels level, string text)
+{
+	cout << text << endl;
+	log_event(level, text.c_str());
 }
 
 // Function that clears out the shared region.
@@ -66,7 +74,6 @@ void termination (int sig)
 	exit(0);
 }
 
-
 void inputProcess (void)
 {
 	// Variables for string parsing and conversion from
@@ -90,12 +97,21 @@ void inputProcess (void)
 
 	if (!ReadFile)
 	{
-		cout << "ERROR OPENING FILE";
-		exit(-1);;
+		event(FATAL, "Error opening file, terminating");
+		exit(-1);
 	}
 
 	// Connect to the shared region
 	ShmPtr = connect_shm(SHM_KEY, arraySize);
+
+	if (ShmPtr == NULL)
+	{
+		event(FATAL, "Shared region pointer is null, terminating");
+		exit(-1);
+	}
+
+
+	// Cast the pointer
 	shmArry = (shared *) ShmPtr;
 
 	// Clear the shared region

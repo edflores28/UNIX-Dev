@@ -13,7 +13,7 @@ EXE=install_data
 SRC=$(EXE).cpp
 OBJ=$(SRC:.cpp=.o)
 
-LIBNAMES=-lshmlib
+LIBNAMES=-lshmlib -llog_mgr
 DEPEND=depend.mk
 STD=-std=c++0x
 CC=g++
