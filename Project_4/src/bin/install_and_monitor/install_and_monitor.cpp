@@ -21,6 +21,7 @@
 #include <sys/ipc.h>
 #include <unistd.h>
 #include "common_struct.h"
+#include "log_mgr.h"
 #include "thread_mgr.h"
 
 #define BUFFER_SIZE 26
@@ -31,12 +32,14 @@ using namespace std;
 // Global Variables
 int ShmId = -1;
 int *Shared;
-int Monitor = 30;
+int MonitorTime = 30;
 int Counter = -1;
 string InputFile;
 ifstream ReadFile;
 bool Hangup = false;
 bool Term = false;
+ThreadHandles Install;
+ThreadHandles Monitor;
 
 // Global Constant
 const int Size = ARRAY_LENGTH * sizeof(shared);
@@ -51,6 +54,13 @@ void setInput (string input)
 string getInput (void)
 {
 	return InputFile;
+}
+
+// Function that logs an event
+void event (Levels level, string text)
+{
+	cout << text << endl;
+	log_event(level, text.c_str());
 }
 
 // Function that clears out the shared region.
@@ -74,6 +84,7 @@ void termination (int sig)
 }
 void *install (void *)
 {
+restart:
 	// Variables for string parsing and conversion from
 	// string representations to respective types
 	string line;
@@ -93,12 +104,18 @@ void *install (void *)
 	ReadFile.open(getInput());
 	if (!ReadFile)
 	{
-		cout << "ERROR OPENING FILE";
-		exit(-1);;
+		event(FATAL, "Error opening file, terminating");
+		th_kill(Install);
 	}
 
 	// Connect to the shared region;
 	shmArry = (shared *) Shared;
+
+	if (shmArry == NULL)
+	{
+		event(FATAL, "Shared region pointer is null, terminating");
+		th_kill(Install);
+	}
 
 	// Clear the shared region
 	clearShared();
@@ -152,15 +169,41 @@ void *install (void *)
 		}
 	}
 
+	// Check to see if the Term flag has been set
+	// and detach, destroy shared region and exit.
 	if (Term)
 	{
 		if(shmdt(Shared) == -1)
 		{
-			perror("shmdt error");
+			perror("shmdestroy error");
+			event(WARNING, "Failed to destroy shared region");
 		}
 
+		if (shmctl (ShmId, IPC_RMID, 0) == -1)
+		{
+			perror("shmdestroy error");
+			event(WARNING, "Failed to destroy shared region");
+		}
+
+		th_kill(Install);
 	}
 
+	// Check to see if Hanup has been set and redo the processing.
+	if (Hangup)
+	{
+		Hangup = false;
+		goto restart;
+	}
+
+	// Destroy the shared region before exiting.
+	if (shmctl (ShmId, IPC_RMID, 0) == -1)
+	{
+		perror("shmdestroy error");
+		event(WARNING, "Failed to destroy shared region");
+	}
+
+	// Exit the thread.
+	th_kill(Install);
 }
 
 void *monitor (void *)
@@ -174,7 +217,7 @@ void *monitor (void *)
 	// Connect to the shared region;
 	shmArry = (shared *) Shared;
 
-	while (Counter != Monitor)
+	while (Counter <= MonitorTime)
 	{
 		for (int i = 0; i < ARRAY_LENGTH; i++) 
 		{
@@ -198,6 +241,9 @@ void *monitor (void *)
 		y = 0.0;
 		totalValid = 0;
 	}
+	
+	// Exit when all processing is done.
+	th_kill(Monitor);
 }
 
 int main(int argc, char *argv[])
@@ -210,7 +256,7 @@ int main(int argc, char *argv[])
 
 		case 3:
 			setInput(argv[1]);
-			Monitor = atoi(argv[2]);
+			MonitorTime = atoi(argv[2]);
 			break;
 
 		default:
@@ -218,13 +264,11 @@ int main(int argc, char *argv[])
 			return -1;
 	}
 
-	int *shared;
+	// Variables
 	shmid_ds info;
 	key_t key;
 	sigset_t mask;
 	sigset_t origMask;
-
-	// Variables for the signal hangler.
 	struct sigaction terminate;
 	struct sigaction old_action;
 	struct sigaction hang;
@@ -271,7 +315,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Execute the install thread.
-	th_execute(install);
+	Install = th_execute(install);
 
 	// Since the install thread has everything needed to
 	// handle it's signals. They will be blocked for
@@ -285,7 +329,7 @@ int main(int argc, char *argv[])
 	sigprocmask(SIG_BLOCK, &mask, &origMask);
 
 	// Execute the monitor thread.
-	th_execute(monitor);
+	Monitor = th_execute(monitor);
 
 	// Wait for all threads.
 	th_wait_all();
