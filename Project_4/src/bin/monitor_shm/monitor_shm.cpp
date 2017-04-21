@@ -47,7 +47,7 @@ int main (int argc, char *argv[])
 
 	// While loop that contains bulk of the processing
 	// and breaks when the counter hits the monitor count.
-	while (Counter != monitor)
+	while (Counter <= monitor)
 	{
 		// Find all valid indexes and update the x, y
 		// and total valid values.
