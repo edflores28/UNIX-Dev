@@ -1,8 +1,11 @@
 /*
  *Project: homework 4
  *
- *Progam: install_and_monitor - This program installs and monitor
- *                              data into shared memory.
+ *Progam: install_and_monitor - This program installs data into
+ *				shared memory and monitors it.
+ *				There is signal handling like
+ *				in install_data. (Wasn't able to
+ *				get it to override thread_mgr)
  *
  *File Name: install_and_monitor.cpp
  *
@@ -76,15 +79,8 @@ void clearShared (void)
 	}
 }
 
-// SIGINT and SIGTERM signal handler
-void termination (int sig)
-{
-	ReadFile.close();
-	Term = true;
-}
 void *install (void *)
 {
-restart:
 	// Variables for string parsing and conversion from
 	// string representations to respective types
 	string line;
@@ -169,32 +165,6 @@ restart:
 		}
 	}
 
-	// Check to see if the Term flag has been set
-	// and detach, destroy shared region and exit.
-	if (Term)
-	{
-		if(shmdt(Shared) == -1)
-		{
-			perror("shmdestroy error");
-			event(WARNING, "Failed to destroy shared region");
-		}
-
-		if (shmctl (ShmId, IPC_RMID, 0) == -1)
-		{
-			perror("shmdestroy error");
-			event(WARNING, "Failed to destroy shared region");
-		}
-
-		th_kill(Install);
-	}
-
-	// Check to see if Hanup has been set and redo the processing.
-	if (Hangup)
-	{
-		Hangup = false;
-		goto restart;
-	}
-
 	// Destroy the shared region before exiting.
 	if (shmctl (ShmId, IPC_RMID, 0) == -1)
 	{
@@ -274,10 +244,10 @@ int main(int argc, char *argv[])
 	struct sigaction hang;
 
 	// Install the signal handlers
-	//terminate.sa_handler = termination;
+	terminate.sa_handler = termination;
 	terminate.sa_flags = SA_RESTART;
 
-	//hang.sa_handler = hangup;
+	hang.sa_handler = hangup;
 	hang.sa_flags = SA_RESTART;
 
 	sigaction(SIGINT, &terminate, &old_action);
