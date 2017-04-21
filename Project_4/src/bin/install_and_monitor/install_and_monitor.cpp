@@ -237,22 +237,6 @@ int main(int argc, char *argv[])
 	// Variables
 	shmid_ds info;
 	key_t key;
-	sigset_t mask;
-	sigset_t origMask;
-	struct sigaction terminate;
-	struct sigaction old_action;
-	struct sigaction hang;
-
-	// Install the signal handlers
-	terminate.sa_handler = termination;
-	terminate.sa_flags = SA_RESTART;
-
-	hang.sa_handler = hangup;
-	hang.sa_flags = SA_RESTART;
-
-	sigaction(SIGINT, &terminate, &old_action);
-	sigaction(SIGTERM, &terminate, &old_action);
-	sigaction(SIGHUP, &hang, NULL);
 
 	// Obtain a key
 	key = ftok("/usr/include", 0);
@@ -286,17 +270,6 @@ int main(int argc, char *argv[])
 
 	// Execute the install thread.
 	Install = th_execute(install);
-
-	// Since the install thread has everything needed to
-	// handle it's signals. They will be blocked for
-	// the monitor thread.
-	sigemptyset(&mask);
-
-	sigaddset(&mask, SIGHUP);
-	sigaddset(&mask, SIGINT);
-	sigaddset(&mask, SIGTERM);
-
-	sigprocmask(SIG_BLOCK, &mask, &origMask);
 
 	// Execute the monitor thread.
 	Monitor = th_execute(monitor);
