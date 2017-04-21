@@ -1,7 +1,9 @@
 /*
  *Project: homework 4
  *
- *Progam: install_data - install data into shared memory 
+ *Progam: install_data - install data into shared memory a
+ *			 pregenrated key is used for the
+ *			 shared region.
  *
  *File Name: install_data.cpp
  *
@@ -29,6 +31,7 @@ void *ShmPtr = NULL;
 string InputFile;
 ifstream ReadFile;
 bool Hangup = false;
+bool Term = false;
 
 // Setter function to set the input file.
 void setInput (string input)
@@ -65,13 +68,8 @@ void clearShared (void)
 // SIGINT and SIGTERM signal handler
 void termination (int sig)
 {
-	if (detach_shm(ShmPtr) == OK)
-		cout << "Detached from shared memory" << endl;
-
-	if  (destroy_shm(SHM_KEY) == OK)
-		cout << "Destroyed shared memory" << endl;
-
-	exit(0);
+	ReadFile.close();
+	Term = true;
 }
 
 void inputProcess (void)
@@ -154,6 +152,7 @@ void inputProcess (void)
 				shmArry[index].x = x;
 				shmArry[index].y = y;
 				shmArry[index].is_valid = 1;
+				event(INFO, (string("index:") + string(1, (char)index) + string(" installed to shared region")));
 			}
 			else
 			{
@@ -162,6 +161,7 @@ void inputProcess (void)
 				time = abs(time);
 				sleep (time);
 				shmArry[index].is_valid = 0;
+				event(INFO, (string("index:") + string(1, (char)index) + string(" marked invalid in shared region")));
 			}
 		}
 	}
@@ -204,16 +204,39 @@ int main (int argc, char *argv[])
 
 restart:
 
+	// Do the processing 
 	inputProcess();
 
+	// Check to see if the Term flag has been set
+	// and detach, destroy shared region and exit.
+	if (Term)
+	{
+
+		if (detach_shm(ShmPtr) == OK)
+			event(INFO, "Shared region successfully detached");
+		else
+			event(WARNING, "Failed to destroy shared region");
+
+		if  (destroy_shm(SHM_KEY) == OK)
+			event(INFO, "Shared region successfully destroyed");
+		else
+			event(WARNING, "Failed to destroy shared region");
+
+		return -1;
+	}
+
+	// Check to see if Hanup has been set and redo the processing.
 	if (Hangup)
 	{
 		Hangup = false;
 		goto restart;
 	}
 
-	// Mark the shared area to be destroyed.
-	destroy_shm(SHM_KEY);
+	// Destroy the shared region before exiting.
+	if  (destroy_shm(SHM_KEY) == OK)
+		event(INFO, "Shared region successfully destroyed");
+	else
+		event(WARNING, "Failed to destroy shared region");
 
 	return 0;
 }
