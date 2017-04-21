@@ -14,6 +14,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <signal.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -33,6 +34,18 @@ int main (int argc, char *argv[])
 	float x = 0.0;
 	float y = 0.0;
 	int totalValid = 0;
+	sigset_t mask;
+
+	sigemptyset(&mask);
+	sigaddset(&mask, SIGINT);
+	sigaddset(&mask, SIGTERM);
+	sigaddset(&mask, SIGHUP);
+
+
+	if (sigprocmask(SIG_BLOCK, &mask, NULL) == -1)
+	{
+		perror("Error setting signal mask");
+	}
 
 
 	// Check to see if there was an argument
