@@ -4,8 +4,7 @@
  *Progam: install_and_monitor - This program installs data into
  *				shared memory and monitors it.
  *				There is signal handling like
- *				in install_data. (Wasn't able to
- *				get it to override thread_mgr)
+ *				in install_data.
  *
  *File Name: install_and_monitor.cpp
  *
@@ -36,13 +35,14 @@ using namespace std;
 int ShmId = -1;
 int *Shared;
 int MonitorTime = 30;
-int Counter = -1;
+int Counter = 0;
 string InputFile;
 ifstream ReadFile;
 bool Hangup = false;
 bool Term = false;
 ThreadHandles Install;
 ThreadHandles Monitor;
+ThreadHandles Old;
 
 // Global Constant
 const int Size = ARRAY_LENGTH * sizeof(shared);
@@ -78,6 +78,23 @@ void clearShared (void)
 		shmArry[i].is_valid = 0;
 	}
 }
+
+// Signal handler
+void handler (int sig)
+{
+	switch(sig)
+	{
+		case SIGINT:
+		
+		case SIGTERM: ReadFile.close();
+			      Term = true;
+		
+		case SIGHUP: ReadFile.close();
+			     Hangup = true;
+			     break;
+	}
+}
+
 
 void *install (void *)
 {
@@ -165,8 +182,41 @@ void *install (void *)
 		}
 	}
 
+	// When the SIGINT SIGTERM signals are handle detach and destroy
+	// the shared region. Also force the process to exit. 
+	// (I wasn't sure how to coordinate a destroyed object in the 
+	// monitoring thread).
+	if (Term)
+	{
+
+		if (shmdt(Shared) == -1)
+		{
+			event(WARNING, "Failed to detach the shared region");
+			perror("shmdt error");
+		}
+
+		// Destroy the shared region before exiting.
+		
+		if (shmctl (ShmId, IPC_RMID, 0) == -1)
+		{
+			perror("shmdestroy error");
+			event(WARNING, "Failed to destroy shared region");
+		}
+
+		exit(-1);
+	}
+
+	// When the SIGHUP signal is hanfled copy the thread handle and
+	// execute a new thread. Then kill the old thread.
+	if (Hangup)
+	{
+		Hangup = false;
+		Old = Install;
+		Install = th_execute(install);
+		th_kill(Old);
+	}
 	// Destroy the shared region before exiting.
-	if (shmctl (ShmId, IPC_RMID, 0) == -1)
+	if ((shmctl (ShmId, IPC_RMID, 0) == -1))
 	{
 		perror("shmdestroy error");
 		event(WARNING, "Failed to destroy shared region");
@@ -273,6 +323,20 @@ int main(int argc, char *argv[])
 
 	// Execute the monitor thread.
 	Monitor = th_execute(monitor);
+
+
+	// Variables for the signal hangler.
+	struct sigaction sigHandler;
+	struct sigaction old_action;
+	struct sigaction hang;
+
+	// Install the signal handlers
+	sigHandler.sa_handler = handler;
+	sigHandler.sa_flags = SA_RESTART;
+
+	sigaction(SIGINT, &sigHandler, &old_action);
+	sigaction(SIGTERM, &sigHandler, &old_action);
+	sigaction(SIGHUP, &sigHandler, &old_action);
 
 	// Wait for all threads.
 	th_wait_all();
