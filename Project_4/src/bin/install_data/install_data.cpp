@@ -152,7 +152,6 @@ void inputProcess (void)
 				shmArry[index].x = x;
 				shmArry[index].y = y;
 				shmArry[index].is_valid = 1;
-				event(INFO, (string("index:") + string(1, (char)index) + string(" installed to shared region")));
 			}
 			else
 			{
@@ -161,7 +160,6 @@ void inputProcess (void)
 				time = abs(time);
 				sleep (time);
 				shmArry[index].is_valid = 0;
-				event(INFO, (string("index:") + string(1, (char)index) + string(" marked invalid in shared region")));
 			}
 		}
 	}
