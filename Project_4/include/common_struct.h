@@ -10,6 +10,8 @@
  */
 #define ARRAY_LENGTH 20
 
+#define SHM_KEY 16975853
+
 struct shared
 {
 	int is_valid;
