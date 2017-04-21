@@ -93,14 +93,12 @@ int destroy_shm(int key)
 		return ERROR;
 	}
 	
-	// Only mark the shared region for destruction
-	// if it has not already been marked
-	if ((info.shm_perm.mode & SHM_DEST) == 0)
-		if (shmctl (shmId, IPC_RMID, 0) == -1)
-		{
-			perror("shmdestroy error");
-			return ERROR;
-		}
+	// Mark the shared region for destruction.
+	if (shmctl (shmId, IPC_RMID, 0) == -1)
+	{
+		perror("shmdestroy error");
+		return ERROR;
+	}
 
 	return OK;
 }
